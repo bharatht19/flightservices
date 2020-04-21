@@ -1,0 +1,29 @@
+Setup the mysql container:
+
+docker run -d -p 6666:3306 --name=docker-mysql --env="MYSQL_ROOT_PASSWORD=test1234" --env="MYSQL_DATABASE=reservation" mysql
+
+docker exec -it docker-mysql bash
+
+# mysql -uroot -p 
+test1234
+
+mysql> show databases;
+
+mysql> show tables; 
+
+
+Another Terminal:
+
+docker exec -i docker-mysql mysql -uroot -ptest1234 reservation <flightdb.sql
+
+
+
+Application Container and testing:
+
+docker build -f Dockerfile -t reservation_app .
+
+docker run -t --link docker-mysql:mysql -p 10555:8080 reservation_app
+
+http://localhost:10555/flightservices/flights
+
+The --link command will allow the reservation_app container to use the port of MySQL
